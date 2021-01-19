@@ -14,15 +14,17 @@ def parse_args():
                         default="", type=str)
     parser.add_argument("--output_folder", help="output folder path to store the responses",
                         default="output", type=str)
+    parser.add_argument("--file_type", help="file type",
+                        default="pdf", type=str)
     
     args = parser.parse_args()
     return args
 
-def analyze_documents(bucket_name, path, output_folder):       
-    documents = utils.get_file_names_s3(bucket_name, path)
+def analyze_documents(bucket_name, path, output_folder, file_type):       
+    documents = utils.get_file_names_s3(bucket_name, path, file_type)
     
     if len(documents) > 0:
-        print('Running document analysis on {} PDF documents:'.format(len(documents)))
+        print('Running document analysis on {} {} documents:'.format(len(documents), file_type[0]))
         for index, file_path in enumerate(documents):
             file_name, _ = utils.get_file_name_and_extension(file_path)
 
@@ -36,12 +38,13 @@ def analyze_documents(bucket_name, path, output_folder):
         print("Analysis completed on {} documents.".format(len(documents)))
         print("Output folder is {}".format(output_folder))
     else:
-        print('No PDF document found')
+        print('No {} document found'.format(file_type[0]))
 
 if __name__ == '__main__':
     args = parse_args()
     bucket_name = args.bucket_name
     path = args.path
     output_folder = args.output_folder
-    analyze_documents(bucket_name, path, output_folder)
+    file_type = [args.file_type]
+    analyze_documents(bucket_name, path, output_folder, file_type)
     

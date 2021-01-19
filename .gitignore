@@ -136,3 +136,7 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Jupyter
+.ipynb_checkpoints
+*.ipynb
